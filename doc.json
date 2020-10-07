@@ -1,0 +1,61 @@
+{
+  "name": "textgen",
+  "description": "Generate text under your player",
+  "author": "cake",
+  "commands": [
+    {
+      "name": "!text",
+      "description": "Generate some text in the world",
+      "example": "!text Hello, World!",
+      "args": [
+        {
+          "name": "text",
+          "description": "text to generate",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "!text:center",
+      "description": "Generate some centered text in the world",
+      "example": "!text:center Hello, World!",
+      "args": [
+        {
+          "name": "text",
+          "description": "text to generate",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "!text:font",
+      "description": "Select a font style",
+      "example": "!text:font large",
+      "args": [
+        {
+          "name": "font",
+          "description": "selected font",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "!text:fonts",
+      "description": "List available fonts",
+      "example": "!text:fonts",
+      "args": []
+    },
+    {
+      "name": "!text:color",
+      "description": "",
+      "example": "!text:color FF00FF",
+      "args": [
+        {
+          "name": "hexcolor",
+          "description": "hex color (000000-FFFFFF) to assign to generated text",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

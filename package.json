@@ -1,0 +1,14 @@
+{
+  "name": "textgen",
+  "version": "1.0.0",
+  "description": "cake plugin for generating text",
+  "main": "omegga.plugin.js",
+  "scripts": {
+    "test": "omegga"
+  },
+  "author": "Meshiest",
+  "license": "ISC",
+  "dependencies": {
+    "brs-js": "^1.2.3"
+  }
+}
