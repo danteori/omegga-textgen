@@ -47,7 +47,7 @@
     },
     {
       "name": "!text:color",
-      "description": "",
+      "description": "Set the color of generated text",
       "example": "!text:color FF00FF",
       "args": [
         {
