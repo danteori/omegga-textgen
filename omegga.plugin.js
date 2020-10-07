@@ -74,7 +74,7 @@ module.exports = class TextGen {
         color: textColors[name] || [0, 0, 0],
         author: player,
         centered,
-      }));
+      }), {quiet: true});
     } catch (e) {
       this.omegga.broadcast(`"Could not find <b>${name}</>"`);
     }
