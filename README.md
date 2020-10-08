@@ -2,7 +2,16 @@
 
 A text generator command for [omegga](https://github.com/brickadia-community/omegga).
 
+## Install
+
+* `git clone https://github.com/meshiest/omegga-textgen textgen` in `plugins` directory
+* `npm i` in `textgen` directory
+
+## Screenshot
+
 ![](https://i.imgur.com/bodEKfY.png)
+
+## Commands
 
 Generate text in-game under your player with the following commands:
 
