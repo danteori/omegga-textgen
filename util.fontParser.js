@@ -11,6 +11,9 @@ module.exports = file => {
   const parser = new ParseTool(brs.read(fs.readFileSync(file)));
   // find the markers
   const startMarker = parser.query({material: 'BMC_Glow', color: 0})[0];
+  if (!startMarker)
+    throw new Error('missing start marker');
+
   const plateAsset = parser.save.brick_assets[startMarker.asset_name_index];
   const endMarker = parser.query({
     asset: plateAsset,
@@ -19,7 +22,11 @@ module.exports = file => {
     color: 7,
   })[0];
 
+  if (!endMarker)
+    throw new Error('missing end marker');
+
   const spacing = startMarker.size[0];
+
 
   // determine which axis the characters are on
   const axis = startMarker.position.findIndex((x, i) => x !==  endMarker.position[i]);
@@ -40,6 +47,9 @@ module.exports = file => {
         width: size[axis] * 2,
       };
     });
+
+  if (characters.length !== 95)
+    throw new Error('not enough characters');
 
   return {
     // generate brick text from string

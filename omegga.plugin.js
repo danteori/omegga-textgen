@@ -8,7 +8,14 @@ const { color: { linearRGB } } = OMEGGA_UTIL;
 const fonts = Object.fromEntries(fs.readdirSync(__dirname + '/fonts')
   .map(f => f.match(/font_([a-z0-9_]+)\.brs/))
   .filter(f => f)
-  .map(match => [match[1], fontParser(__dirname + '/fonts/' + match[0])]));
+  .map(match => {
+    try {
+      return [match[1], fontParser(__dirname + '/fonts/' + match[0])];
+    } catch (err) {
+      console.error('Error parsing font', match[1], ':', err);
+    }
+  })
+  .filter(v => v));
 
 const cooldown = CooldownProvider(1000);
 const textColors = {};
