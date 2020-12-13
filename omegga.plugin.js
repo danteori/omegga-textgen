@@ -41,11 +41,11 @@ module.exports = class TextGen {
         }
       })
       // list fonts
-      .on('chatcmd:text:fonts', (name, font) => {
+      .on('chatcmd:text:fonts', name => {
         if (cooldown(name)) {
           this.omegga.broadcast(`"<b>Fonts</>: ${Object.keys(fonts).map(f => `<code>${f}</>`).join(', ')}"`);
         }
-      })
+      });
   }
 
   stop() {

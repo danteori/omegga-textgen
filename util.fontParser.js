@@ -10,8 +10,16 @@ const fs = require('fs');
 module.exports = file => {
   const parser = new ParseTool(brs.read(fs.readFileSync(file)));
   // find the markers
-  const startMarker = parser.query({asset: 'PB_DefaultBrick', size: [5, 5, 2], material: 'BMC_Glow', color: 0})[0];
-  const endMarker = parser.query({asset: 'PB_DefaultBrick', size: [5, 5, 2], material: 'BMC_Glow', color: 7})[0];
+  const startMarker = parser.query({material: 'BMC_Glow', color: 0})[0];
+  const plateAsset = parser.save.brick_assets[startMarker.asset_name_index];
+  const endMarker = parser.query({
+    asset: plateAsset,
+    size: startMarker.size,
+    material: 'BMC_Glow',
+    color: 7,
+  })[0];
+
+  const spacing = startMarker.size[0];
 
   // determine which axis the characters are on
   const axis = startMarker.position.findIndex((x, i) => x !==  endMarker.position[i]);
@@ -19,7 +27,7 @@ module.exports = file => {
   const delta = endMarker.position[axis] - startMarker.position[axis];
 
   // get the character plates
-  const characters = parser.query({asset: 'PB_DefaultBrick', material: 'BMC_Plastic', color: 0})
+  const characters = parser.query({asset: plateAsset, material: 'BMC_Plastic', color: 0})
     // sort them based on distance from start marker
     .sort((a, b) =>
       (a.position[axis] - b.position[axis])*delta
@@ -42,7 +50,7 @@ module.exports = file => {
       const tool = new WriteTool(parser.save).empty();
 
       // if the text is centered, move the text to the left by half of the width
-      const fullWidth = chars.reduce((a, c) => a + characters[c - 32].width + 10, -5);
+      const fullWidth = chars.reduce((a, c) => a + characters[c - 32].width + spacing * 2, -spacing);
       if (centered)
         length -= fullWidth/2;
 
@@ -54,7 +62,7 @@ module.exports = file => {
         // add the kerning and existing length
         shifted[axis] += (length + width/2) * Math.sign(delta);
         // center this character
-        length += width + 10;
+        length += width + spacing * 2;
         // add it to the save
         tool.addBrick(...moveBricks(bricks, shifted));
       }
@@ -84,4 +92,4 @@ module.exports = file => {
       return tool.write();
     },
   };
-}
+};
