@@ -17,39 +17,49 @@ const fonts = Object.fromEntries(fs.readdirSync(__dirname + '/fonts')
   })
   .filter(v => v));
 
-const cooldown = CooldownProvider(1000);
 const textColors = {};
 const textFonts = {};
 
 module.exports = class TextGen {
-  constructor(omegga) {
+  constructor(omegga, config) {
     this.omegga = omegga;
+    this.config = config;
   }
 
 
   init() {
+    const authorized = name => !this.config['host-only'] || Omegga.getPlayer(name).isHost() ||
+      this.config['authorized'].split(',').includes(name);
+
+    const duration = Math.max(this.config.cooldown * 1000, 0);
+    const cooldown = duration <= 0 ? () => true : CooldownProvider(duration);
+
     this.omegga
       // render text
-      .on('chatcmd:text', (name, ...msg) => cooldown(name) && this.cmdText(name, msg.join(' '), false))
+      .on('chatcmd:text', (name, ...msg) => authorized(name) && cooldown(name) &&
+          this.cmdText(name, msg.join(' '), false))
+
       // render centered text
-      .on('chatcmd:text:center', (name, ...msg) => cooldown(name) && this.cmdText(name, msg.join(' '), true))
+      .on('chatcmd:text:center', (name, ...msg) => authorized(name) && cooldown(name) &&
+        this.cmdText(name, msg.join(' '), true))
+
       // change text color
       .on('chatcmd:text:color', (name, color) => {
-        if (cooldown(name) && color.match(/^[0-9A-F]{6}$/i)) {
+        if (authorized(name) && cooldown(name) && color.match(/^[0-9A-F]{6}$/i)) {
           textColors[name] = linearRGB([parseInt(color.slice(0, 2), 16), parseInt(color.slice(2, 4), 16), parseInt(color.slice(4, 6), 16)]);
           this.omegga.broadcast(`"Setting <b>${name}</> color to #<color=\\"${color}\\">${color.toUpperCase()}</>"`);
         }
       })
       // change text font
       .on('chatcmd:text:font', (name, font) => {
-        if (cooldown(name) && fonts[font]) {
+        if (authorized(name) && cooldown(name) && fonts[font]) {
           textFonts[name] = font;
           this.omegga.broadcast(`"Setting <b>${name}</> font to <b>${font}</>"`);
         }
       })
       // list fonts
       .on('chatcmd:text:fonts', name => {
-        if (cooldown(name)) {
+        if (authorized(name) && cooldown(name)) {
           this.omegga.broadcast(`"<b>Fonts</>: ${Object.keys(fonts).map(f => `<code>${f}</>`).join(', ')}"`);
         }
       });
