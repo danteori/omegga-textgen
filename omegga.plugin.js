@@ -28,8 +28,10 @@ module.exports = class TextGen {
 
 
   init() {
-    const authorized = name => !this.config['host-only'] || Omegga.getPlayer(name).isHost() ||
-      this.config['authorized'].split(',').includes(name);
+    const authorized = name => {
+      const player = Omegga.getPlayer(name);
+      return !this.config['only-authorized'] || player.isHost() || this.config['authorized-users'].some(p => player.id === p.id);
+    };
 
     const duration = Math.max(this.config.cooldown * 1000, 0);
     const cooldown = duration <= 0 ? () => true : CooldownProvider(duration);

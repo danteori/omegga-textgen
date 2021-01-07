@@ -2,16 +2,16 @@
   "name": "textgen",
   "description": "Generate text under your player",
   "author": "cake",
-    "config": {
-    "host-only": {
-      "description": "Whether commands are host only",
+  "config": {
+    "only-authorized": {
+      "description": "Whether only authorized players can use commands",
       "type": "boolean",
-      "default": false
+      "default": true
     },
-    "authorized": {
-      "description": "Comma separated list of authorized usernames who can use commands",
-      "type": "string",
-      "default": ""
+    "authorized-users": {
+      "description": "List of players who can always commands",
+      "type": "players",
+      "default": []
     },
     "cooldown": {
       "description": "How long before users can re-run the command (seconds)",
