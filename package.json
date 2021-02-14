@@ -6,6 +6,10 @@
   "scripts": {
     "test": "omegga"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Meshiest/omegga-textgen.git"
+  },
   "author": "Meshiest",
   "license": "ISC",
   "dependencies": {
