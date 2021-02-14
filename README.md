@@ -4,6 +4,10 @@ A text generator command for [omegga](https://github.com/brickadia-community/ome
 
 ## Install
 
+Easy: `omegga install gh:Meshiest/textgen`
+
+Manual:
+
 * `git clone https://github.com/meshiest/omegga-textgen textgen` in `plugins` directory
 * `npm i` in `textgen` directory
 
