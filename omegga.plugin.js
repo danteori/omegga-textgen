@@ -80,6 +80,8 @@ module.exports = class TextGen {
   async cmdText(name, message, centered) {
     const player = this.omegga.getPlayer(name);
 
+    if (message.trim().length === 0) return;
+
     try {
       let [x, y, z] = await player.getPosition();
       // round off player position

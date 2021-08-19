@@ -1,6 +1,6 @@
 {
   "name": "textgen",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "cake plugin for generating text",
   "main": "omegga.plugin.js",
   "scripts": {
