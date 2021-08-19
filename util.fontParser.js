@@ -77,7 +77,7 @@ module.exports = file => {
         tool.addBrick(...moveBricks(bricks, shifted));
       }
       // set the color
-      tool.bricks.forEach(b => b.color = [...color, 255]);
+      tool.bricks.forEach(b => b.color = color);
       // set the author
       if (author) tool.setAuthor(author);
       // save
@@ -92,7 +92,7 @@ module.exports = file => {
         const { bricks } = characters[c - 32];
         const shifted = [shift[0] + x, shift[1] + y, shift[2] + z];
         const newBricks = moveBricks(bricks, shifted);
-        newBricks.forEach(b => b.color = [...color, 255]);
+        newBricks.forEach(b => b.color = color);
         tool.addBrick(...newBricks);
       }
       tool.add(...moveBricks(bricks, shift));
