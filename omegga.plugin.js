@@ -89,13 +89,17 @@ module.exports = class TextGen {
       y = Math.floor(y);
       z = Math.floor(z);
 
-      // load the text save data as this owner
-      this.omegga.loadSaveData(fonts[textFonts[name] || 'default'].text(message, {
+
+      const save = fonts[textFonts[name] || 'default'].text(message, {
         shift: [x, y, z - 27],
         color: textColors[name] || [0, 0, 0],
         author: player,
         centered,
-      }), {quiet: true});
+      });
+
+      if (save.bricks.length === 0) return;
+      // load the text save data as this owner
+      this.omegga.loadSaveData(save, {quiet: true});
     } catch (e) {
       this.omegga.broadcast(`"Could not find <b>${name}</>"`);
     }
