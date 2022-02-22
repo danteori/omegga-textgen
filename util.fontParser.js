@@ -10,7 +10,7 @@ const fs = require('fs');
 module.exports = file => {
   const parser = new ParseTool(brs.read(fs.readFileSync(file)));
   // find the markers
-  const startMarker = parser.query({material: 'BMC_Glow', color: 0})[0];
+  const startMarker = parser.query({material: 'BMC_Glow'})[0];
   if (!startMarker)
     throw new Error('missing start marker');
 
@@ -18,8 +18,7 @@ module.exports = file => {
   const endMarker = parser.query({
     asset: plateAsset,
     size: startMarker.size,
-    material: 'BMC_Glow',
-    color: 7,
+    material: 'BMC_Metallic',
   })[0];
 
   if (!endMarker)
@@ -49,7 +48,7 @@ module.exports = file => {
     });
 
   if (characters.length !== 95)
-    throw new Error('not enough characters');
+    throw new Error('not enough characters (' + characters.length + '/95');
 
   return {
     // generate brick text from string
