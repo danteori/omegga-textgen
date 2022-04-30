@@ -8,9 +8,7 @@ const fs = require('fs').promises;
 
 // take a file and return a generator fn
 module.exports = async file => {
-  console.debug('[debug] loading', Date.now(), file);
   const parser = new ParseTool(brs.read(await fs.readFile(file)));
-  console.debug('[debug] loaded', Date.now(), file);
   // find the markers
   const startMarker = parser.query({ material: 'BMC_Glow', color: 0 })[0];
   if (!startMarker) throw new Error('missing start marker');

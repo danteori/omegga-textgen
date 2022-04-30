@@ -26,24 +26,28 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
   }
 
   async init() {
-    Promise.all(
-      fs
+    // parse fonts on load
+    (async () => {
+      const matches = fs
         .readdirSync(__dirname + '/fonts')
         .map(f => f.match(/font_([a-z0-9_]+)\.brs$/))
-        .filter(f => f)
-        .map(async match => {
-          try {
-            return [
-              match[1],
-              await fontParser(__dirname + '/fonts/' + match[0]),
-            ];
-          } catch (err) {
-            console.error('Error parsing font', match[1], ':', err);
-          }
-        })
-    ).then(entries => {
-      fonts = Object.fromEntries(entries.filter(v => v));
-    });
+        .filter(f => f);
+
+      const parsedFonts = [];
+      console.info('Parsing', matches.length, 'fonts');
+      for (const match of matches) {
+        try {
+          parsedFonts.push([
+            match[1],
+            await fontParser(__dirname + '/fonts/' + match[0]),
+          ]);
+        } catch (err) {
+          console.error('Error parsing font', match[1], ':', err);
+        }
+      }
+      fonts = Object.fromEntries(parsedFonts);
+      console.info('Loaded', parsedFonts.length, 'fonts');
+    })();
 
     const authorized = (name: string) => {
       const player = this.omegga.getPlayer(name);
