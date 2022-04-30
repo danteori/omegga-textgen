@@ -1,7 +1,7 @@
 {
   "name": "textgen",
   "description": "Generate text under your player",
-  "author": "cake",
+  "author": "cake, fonts from skill4life, remanedur, orion, and erika",
   "config": {
     "only-authorized": {
       "description": "Whether only authorized players can use commands",
@@ -22,20 +22,8 @@
   "commands": [
     {
       "name": "!text",
-      "description": "Generate some text in the world",
+      "description": "Copy text to your clipboard using your paint can color",
       "example": "!text Hello, World!",
-      "args": [
-        {
-          "name": "text",
-          "description": "text to generate",
-          "required": true
-        }
-      ]
-    },
-    {
-      "name": "!text:center",
-      "description": "Generate some centered text in the world",
-      "example": "!text:center Hello, World!",
       "args": [
         {
           "name": "text",
@@ -61,18 +49,6 @@
       "description": "List available fonts",
       "example": "!text:fonts",
       "args": []
-    },
-    {
-      "name": "!text:color",
-      "description": "Set the color of generated text",
-      "example": "!text:color FF00FF",
-      "args": [
-        {
-          "name": "hexcolor",
-          "description": "hex color (000000-FFFFFF) to assign to generated text",
-          "required": true
-        }
-      ]
     }
   ]
 }

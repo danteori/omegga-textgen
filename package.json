@@ -1,6 +1,6 @@
 {
   "name": "textgen",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "cake plugin for generating text",
   "main": "omegga.plugin.js",
   "scripts": {
@@ -12,9 +12,6 @@
   },
   "author": "Meshiest",
   "license": "ISC",
-  "dependencies": {
-    "brs-js": "^2.0.0"
-  },
   "devDependencies": {
     "@types/node": "^17.0.24"
   }

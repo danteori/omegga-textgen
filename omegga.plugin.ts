@@ -1,29 +1,10 @@
-import OmeggaPlugin, { Brick, OL, PC, PS, WriteSaveObject } from 'omegga';
-
+import OmeggaPlugin, { OL, PC, PS, WriteSaveObject } from 'omegga';
 import fs from 'fs';
-import fontParser from './util.fontParser.js';
 import CooldownProvider from './util.cooldown.js';
-
-const {
-  color: { linearRGB },
-} = global.OMEGGA_UTIL;
+import fontParser from './util.fontParser.js';
 
 // load in saves in font_fontname.brs format
-const fonts = Object.fromEntries(
-  fs
-    .readdirSync(__dirname + '/fonts')
-    .map(f => f.match(/font_([a-z0-9_]+)\.brs/))
-    .filter(f => f)
-    .map(match => {
-      try {
-        return [match[1], fontParser(__dirname + '/fonts/' + match[0])];
-      } catch (err) {
-        console.error('Error parsing font', match[1], ':', err);
-      }
-    })
-    .filter(v => v)
-);
-
+let fonts;
 const textFonts = {};
 
 type Config = {
@@ -45,6 +26,25 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
   }
 
   async init() {
+    Promise.all(
+      fs
+        .readdirSync(__dirname + '/fonts')
+        .map(f => f.match(/font_([a-z0-9_]+)\.brs$/))
+        .filter(f => f)
+        .map(async match => {
+          try {
+            return [
+              match[1],
+              await fontParser(__dirname + '/fonts/' + match[0]),
+            ];
+          } catch (err) {
+            console.error('Error parsing font', match[1], ':', err);
+          }
+        })
+    ).then(entries => {
+      fonts = Object.fromEntries(entries.filter(v => v));
+    });
+
     const authorized = (name: string) => {
       const player = this.omegga.getPlayer(name);
       return (
@@ -61,19 +61,10 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
       // render text
       .on(
         'chatcmd:text',
-        (name, ...msg) =>
+        (name: string, ...msg: string[]) =>
           authorized(name) &&
           cooldown(name) &&
-          this.cmdText(name, msg.join(' '), false)
-      )
-
-      // render centered text
-      .on(
-        'chatcmd:text:center',
-        (name, ...msg) =>
-          authorized(name) &&
-          cooldown(name) &&
-          this.cmdText(name, msg.join(' '), true)
+          this.cmdText(name, msg.join(' '))
       )
 
       // change text font
@@ -86,7 +77,7 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
         }
       })
       // list fonts
-      .on('chatcmd:text:fonts', name => {
+      .on('chatcmd:text:fonts', (name: string) => {
         if (authorized(name) && cooldown(name)) {
           this.omegga.broadcast(
             `"<b>Fonts</>: ${Object.keys(fonts)
@@ -97,20 +88,17 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
       });
   }
 
-  async stop() {
-    this.omegga
-      .removeAllListeners('chatcmd:text')
-      .removeAllListeners('chatcmd:text:center')
-      .removeAllListeners('chatcmd:text:color')
-      .removeAllListeners('chatcmd:text:font')
-      .removeAllListeners('chatcmd:text:fonts');
-  }
+  async stop() {}
 
   // load text in
-  async cmdText(name, message, centered) {
+  async cmdText(name: string, message: string) {
     const player = this.omegga.getPlayer(name);
 
     if (message.trim().length === 0) return;
+    if (!fonts) {
+      Omegga.whisper(name, 'Fonts are still being loaded...');
+      return;
+    }
 
     try {
       const paint = await player.getPaint();
@@ -120,7 +108,7 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
           shift: [0, 0, 0],
           color: paint.color || [0, 0, 0],
           author: player,
-          centered,
+          centered: false,
         }
       );
       save.materials = save.materials.map(m => paint.material);
