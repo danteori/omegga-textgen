@@ -73,6 +73,10 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
 
       // change text font
       .on('chatcmd:text:font', (name, font) => {
+        if (!fonts) {
+          Omegga.whisper(name, 'Fonts are still being loaded...');
+          return;
+        }
         if (authorized(name) && cooldown(name) && fonts[font]) {
           textFonts[name] = font;
           this.omegga.broadcast(
@@ -82,6 +86,10 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
       })
       // list fonts
       .on('chatcmd:text:fonts', (name: string) => {
+        if (!fonts) {
+          Omegga.whisper(name, 'Fonts are still being loaded...');
+          return;
+        }
         if (authorized(name) && cooldown(name)) {
           this.omegga.broadcast(
             `"<b>Fonts</>: ${Object.keys(fonts)
