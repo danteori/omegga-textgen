@@ -10,6 +10,7 @@ const textFonts = {};
 type Config = {
   'only-authorized': boolean;
   'authorized-users': { id: string; name: string }[];
+  'authorized-roles': string [];
   cooldown: number;
 };
 type Storage = {};
@@ -54,7 +55,8 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
       return (
         !this.config['only-authorized'] ||
         player.isHost() ||
-        this.config['authorized-users'].some(p => player.id === p.id)
+        this.config['authorized-users'].some(p => player.id === p.id) ||
+        player.getRoles().some(role => this.config['authorized-roles'].includes(role))
       );
     };
 
