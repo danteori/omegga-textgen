@@ -10,7 +10,7 @@ const textFonts = {};
 type Config = {
   'only-authorized': boolean;
   'authorized-users': { id: string; name: string }[];
-  'authorized-roles': string [];
+  'authorized-roles': string[];
   cooldown: number;
 };
 type Storage = {};
@@ -30,7 +30,7 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
     // parse fonts on load
     (async () => {
       const matches = fs
-        .readdirSync(__dirname + '/fonts')
+        .readdirSync(__dirname + '/../fonts')
         .map(f => f.match(/font_([a-z0-9_]+)\.brs$/))
         .filter(f => f);
 
@@ -40,7 +40,7 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
         try {
           parsedFonts.push([
             match[1],
-            await fontParser(__dirname + '/fonts/' + match[0]),
+            await fontParser(__dirname + '/../fonts/' + match[0]),
           ]);
         } catch (err) {
           console.error('Error parsing font', match[1], ':', err);
@@ -56,7 +56,9 @@ export default class TextGen implements OmeggaPlugin<Config, Storage> {
         !this.config['only-authorized'] ||
         player.isHost() ||
         this.config['authorized-users'].some(p => player.id === p.id) ||
-        player.getRoles().some(role => this.config['authorized-roles'].includes(role))
+        player
+          .getRoles()
+          .some(role => this.config['authorized-roles'].includes(role))
       );
     };
 
