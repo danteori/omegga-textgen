@@ -19,8 +19,10 @@ Manual:
 
 Generate text in-game under your player with the following commands:
 
- * `!text message` - generate "message" beneath your player
- * `!text:center message` - generate "message" centered beneath your player
- * `!text:color ff00ff` - change the color of your generated text
- * `!text:font default` - set the font of the generated text
- * `!text:fonts` - list available generated fonts
+| Command | Description |
+| - | - |
+| `!text (message)` | Generate a message underneath your character.
+| `!text:center (message)` | Generate a message centered beneath your character.
+| `!text:color (hex)` | Sets the color of future generated text. This should be a hexadecimal color code, such as `ff0000` for red.
+| `!text:font (font)` | Sets the font of future generated text. Use the `!text:fonts` command to view the available fonts.
+| `!text:fonts` | Lists available fonts for the `!text:font` command.
